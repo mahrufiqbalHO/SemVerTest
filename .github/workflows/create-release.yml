@@ -1,7 +1,8 @@
 on:
   push:
-    tags:
-      - 'v*'
+    # branches to consider in the event; optional, defaults to all
+    branches:
+      - main
 
 name: Create Release
 
