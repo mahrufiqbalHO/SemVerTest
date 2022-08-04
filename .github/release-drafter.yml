@@ -5,11 +5,20 @@ categories:
     labels:
       - 'feature'
       - 'enhancement'
+      - 'feat'
   - title: '🐛 Bug Fixes'
     labels:
       - 'fix'
       - 'bugfix'
       - 'bug'
+  - title: '🚀 Documentation'
+    label: 'docs'
+  - title: '🚀 Refactor'
+    label: 'refactor'
+  - title: '🚀 Formatting'
+    label: 'style'
+  - title: '🚀 Tests'
+    label: 'test'
   - title: '🧰 Maintenance'
     label: 'chore'
   - title: '🧺 Miscellaneous' #Everything except ABAP
