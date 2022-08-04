@@ -1,2 +1,2 @@
 # SemVerTest
-25
+26
