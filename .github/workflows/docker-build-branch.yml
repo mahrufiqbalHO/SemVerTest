@@ -53,3 +53,4 @@ jobs:
      if: ${{ github.event.workflow_run.conclusion == 'failure' }}
      steps:
        - run: echo "SnykContainer detected vulnerabilities in your image!"
+       - run: exit 1
