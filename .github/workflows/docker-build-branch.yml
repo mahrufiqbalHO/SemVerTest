@@ -45,6 +45,7 @@ jobs:
             PACKAGE_TOKEN=${{secrets.GITHUB_TOKEN}}
           
       - name: Run Snyk to check Docker image for vulnerabilities
+        id: snyk
         uses: snyk/actions/docker@master
         env:
          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -60,7 +61,7 @@ jobs:
           sarif_file: snyk.sarif
       
       - name: Check on failures
-        if: steps.check-fail.outcome != 'success'
+        if: steps.snyk.outcome != 'success'
         run: exit 1
       
       - name: Push image
