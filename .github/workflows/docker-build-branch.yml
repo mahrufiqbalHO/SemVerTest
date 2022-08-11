@@ -53,7 +53,7 @@ jobs:
          image: ${{ steps.meta.outputs.tags }}
          args: |
             --file=Dockerfile
-            --severity-threshold=low
+            --severity-threshold=medium
     
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
