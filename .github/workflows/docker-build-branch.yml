@@ -1,8 +1,10 @@
 name: 'Docker Build Branch'
 
 on:
-  pull_request:
-    types: [ labeled, opened, reopened, synchronize ]
+  workflow_run:
+    workflows: [ SnykContainer ]
+    branches: [ main ]
+    types: [ completed ]
 
 env:
   REGISTRY: ghcr.io
@@ -17,6 +19,9 @@ jobs:
       #Checks-out our repository under $GITHUB_WORKSPACE, so our workflow can access it.
       - name: Checkout
         uses: actions/checkout@v2
+        
+      - name: Workflow Run Wait
+        uses: ahmadnassri/action-workflow-run-wait@v1
 
         #Logs into Github registry
       - name: Login to GitHub Container Registry
