@@ -24,7 +24,7 @@ jobs:
       - run: env
       
       - name: Test Env Variable 
-        run: echo ${{ env.GITHUB_SHA_SHORT }}
+        run: echo ${{ env.GITHUB_PR_SHA }}
       
         #Logs into Github registry
       - name: Login to GitHub Container Registry
