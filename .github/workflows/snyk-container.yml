@@ -6,7 +6,11 @@ on:
 
 permissions:
   contents: read
-
+  
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  
 jobs:
   snyk:
     permissions:
@@ -22,6 +26,7 @@ jobs:
       if: ${{ github.event_name == 'pull_request' }}
       uses: docker/metadata-action@v4
       with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
           type=raw,value=${{ github.event.pull_request.head.sha }}
     
