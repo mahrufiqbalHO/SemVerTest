@@ -23,7 +23,7 @@ jobs:
     
     - name: Calculate metadata
       id: meta
-      if: ${{ github.event.pull_request.merged == true }} 
+      if: ${{ github.event.pull_request.merged }} 
       uses: docker/metadata-action@v4
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
@@ -31,11 +31,11 @@ jobs:
           type=raw,value=${{ github.event.pull_request.head.sha }}
           
     - name: Set env
-      if: ${{ github.event.pull_request.merged == true }} 
+      if: ${{ github.event.pull_request.merged }} 
       run: echo "GITHUB_PR_SHA=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
       
     - name: Test
-      if: ${{ github.event.pull_request.merged == true }} 
+      if: ${{ github.event.pull_request.merged }} 
       run: echo $GITHUB_PR_SHA
     
     - name: Build a Docker image
