@@ -1,1 +1,2 @@
 # SemVerTest
+with SmokeTag
