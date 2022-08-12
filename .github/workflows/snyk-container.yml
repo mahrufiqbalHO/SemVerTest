@@ -31,8 +31,11 @@ jobs:
           type=raw,value=${{ github.event.pull_request.head.sha }}
           
     - name: Set env
+      if: ${{ github.event_name == 'pull_request' }}
       run: echo "GITHUB_PR_SHA=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
+      
     - name: Test
+      if: ${{ github.event_name == 'pull_request' }}
       run: echo $GITHUB_PR_SHA
     
     - name: Build a Docker image
