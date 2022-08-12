@@ -1,0 +1,43 @@
+name: Snyk Container
+
+on:
+  pull_request:
+  schedule:
+    - cron: '0 14 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  snyk:
+    permissions:
+      contents: read 
+      security-events: write 
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'smoketest') == false
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build a Docker image
+      run: docker build -t your/image-to-test .
+    
+    - name: Run Snyk to check Docker image for vulnerabilities
+      id: snyk
+      continue-on-error: true
+      uses: snyk/actions/docker@master
+      env:
+       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+       image: ${{ steps.meta.outputs.tags }}
+       args: |
+          --file=Dockerfile
+          --severity-threshold=low
+
+    - name: Upload result to GitHub Code Scanning
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: snyk.sarif
+
+    - name: Check on failures
+      if: steps.snyk.outcome != 'success'
+      run: exit 1
