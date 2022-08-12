@@ -29,7 +29,11 @@ jobs:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
           type=raw,value=${{ github.event.pull_request.head.sha }}
-        run: echo "GITHUB_PR_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+          
+    - name: Set env
+      run: echo "GITHUB_PR_SHA=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
+    - name: Test
+      run: echo $GITHUB_PR_SHA
     
     - name: Build a Docker image
       run: docker build -t your/image-to-test .
