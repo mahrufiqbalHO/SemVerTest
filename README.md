@@ -1,2 +1,2 @@
 # SemVerTest
-a1
+a2
