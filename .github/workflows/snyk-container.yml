@@ -1,8 +1,9 @@
 name: SnykContainer
 
 on:
-  - pull_request
-  - push
+  pull_request:
+    types:
+      - closed
 
 permissions:
   contents: read
