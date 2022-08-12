@@ -1,31 +1,23 @@
-name: Test
+name: 'Docker Build Branch'
 
 on:
-  workflow_run:
-    workflows:
-      - SnykContainer
-    types:
-      - completed
+  pull_request:
+    types: [ labeled, opened, reopened, synchronize ]
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-   on-success:
-     runs-on: ubuntu-latest
-     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-     steps:
+  publish:
+    name: 'Branch Publish'
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'smoketest') == true
+    steps:
       #Checks-out our repository under $GITHUB_WORKSPACE, so our workflow can access it.
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
-      - run: git branch
-      - run: env
-      
-      - name: Test Env Variable 
-        run: echo ${{ env.GITHUB_PR_SHA }}
-      
+
         #Logs into Github registry
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2.0.0
@@ -45,15 +37,32 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             PACKAGE_TOKEN=${{secrets.GITHUB_TOKEN}}
-            
-   on-failure:
-     runs-on: ubuntu-latest
-     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-     steps:
-       - run: echo "SnykContainer detected vulnerabilities in your image!"
-       - run: exit 1
+          
+      - name: Run Snyk to check Docker image for vulnerabilities
+        id: snyk
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+         image: ${{ steps.meta.outputs.tags }}
+         args: |
+            --file=Dockerfile
+            --severity-threshold=medium
+    
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
+      
+      - name: Check on failures
+        if: steps.snyk.outcome != 'success'
+        run: exit 1
+      
+      - name: Push image
+        run: docker push ${{ steps.meta.outputs.tags }}
