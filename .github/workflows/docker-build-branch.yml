@@ -3,7 +3,6 @@ name: 'Docker Build Branch'
 on:
   workflow_run:
     workflows: [ SnykContainer ]
-    branches: [ main ]
     types: [ completed ]
 
 env:
