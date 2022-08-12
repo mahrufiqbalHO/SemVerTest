@@ -1,8 +1,9 @@
 name: SnykContainer
 
 on:
-  pull_request:
-    types: [ labeled, opened, reopened, synchronize, closed ]
+  push: 
+  pull_request: 
+   types: [ labeled, opened, reopened, synchronize, closed ]
 
 permissions:
   contents: read
