@@ -41,7 +41,7 @@ jobs:
       - name: Build container
         uses: docker/build-push-action@v3
         with:
-          file: .
+          context: .
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
