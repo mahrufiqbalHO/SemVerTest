@@ -2,7 +2,7 @@ name: 'Docker Build Branch'
 
 on:
   pull_request:
-    types: [ labeled, opened, reopened, synchronize ]
+    types: [ labeled, opened, reopened, synchronize, closed ]
 
 env:
   REGISTRY: ghcr.io
@@ -72,5 +72,5 @@ jobs:
         run: exit 1
 
       - name: Push image to GitHub Container Registry
-        #if: github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true
         run: docker push ${{ steps.meta.outputs.tags }}
