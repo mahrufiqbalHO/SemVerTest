@@ -72,5 +72,5 @@ jobs:
         run: exit 1
 
       - name: Push image to GitHub Container Registry
-        if: github.event.pull_request.merged == true
+        #if: github.event.pull_request.merged == true
         run: docker push ${{ steps.meta.outputs.tags }}
