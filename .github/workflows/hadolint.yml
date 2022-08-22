@@ -3,6 +3,9 @@ name: Docker Lint
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches:
+    - main
 
 jobs:
   docker-lint:
